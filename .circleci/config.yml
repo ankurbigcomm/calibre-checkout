@@ -26,6 +26,6 @@ jobs:
           paths:
             - node_modules
 
-      - run: npm install -g calibre
+      - run: sudo npm install -g calibre
       - run: calibre token set 3ca6aacc3c2b4eb068ee2ce332e5e557996fd00894792d88b7a2b1159ea5d9af
       - run: calibre site create-snapshot --site=checkout-9f1887a8-3433-475d-81fd-93f8a156838e
