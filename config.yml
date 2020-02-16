@@ -9,15 +9,6 @@ jobs:
       # Specify the version you desire here
       - image: circleci/php:7.1-node-browsers
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # Using the RAM variation mitigates I/O contention
-      # for database intensive operations.
-      # - image: circleci/mysql:5.7-ram
-      #
-      # - image: redis:2.8.19
-
     steps:
       - checkout
 
@@ -48,9 +39,9 @@ jobs:
           paths:
             - node_modules
 
-      # prepare the database
-      - run: touch storage/testing.sqlite
-      - run: php artisan migrate --env=testing --database=sqlite_testing --force
+      - run: npm install -g calibre
+      - run: calibre token set 3ca6aacc3c2b4eb068ee2ce332e5e557996fd00894792d88b7a2b1159ea5d9af
+      - run: calibre site create-snapshot --site=checkout-9f1887a8-3433-475d-81fd-93f8a156838e
 
       # run tests with phpunit or codecept
       #- run: ./vendor/bin/phpunit

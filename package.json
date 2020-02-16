@@ -1,0 +1,22 @@
+{
+  "name": "calibre-checkout",
+  "version": "1.0.0",
+  "description": "Setup for running calibre performance test for checkout",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ankurbigcomm/calibre-checkout.git"
+  },
+  "keywords": [
+    "Calibre"
+  ],
+  "author": "BigCommerce",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ankurbigcomm/calibre-checkout/issues"
+  },
+  "homepage": "https://github.com/ankurbigcomm/calibre-checkout#readme"
+}
