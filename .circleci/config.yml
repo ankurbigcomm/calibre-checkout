@@ -1,7 +1,3 @@
-# PHP CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-php/ for more details
-#
 version: 2
 jobs:
   build:
@@ -11,21 +7,40 @@ jobs:
 
     steps:
       - checkout
-
-      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
-      - run: sudo docker-php-ext-install zip
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - node-v1-{{ checksum "package.json" }}
-            - node-v1-
-      - run: yarn install
-      - save_cache:
-          key: node-v1-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-
-      - run: sudo npm install -g calibre
-      - run: calibre token set 3ca6aacc3c2b4eb068ee2ce332e5e557996fd00894792d88b7a2b1159ea5d9af
-      - run: calibre site create-snapshot --site=checkout-9f1887a8-3433-475d-81fd-93f8a156838e
+      - run:
+          name: Environment Update
+          command: sudo apt update && sudo apt-get update
+      - run:
+          name: Install Dependencies
+          command: sudo docker-php-ext-install zip && sudo apt-get install unzip
+      - run:
+          name: Install jmeter
+          command: wget -c http://apache.mirror.amaze.com.au//jmeter/binaries/apache-jmeter-5.2.1.zip && unzip apache-jmeter-5.2.1.zip
+      - run:
+          name: Test Set up
+          command: sh apache-jmeter-5.2.1/bin/jmeter.sh -n -t store_setup.jmx
+      - run:
+          name: Install calibre
+          command: sudo npm install -g calibre
+      - run:
+          name: Configure calibre environment
+          command: calibre token set ${CALIBRE_API_TOKEN}
+      - run:
+          name: Update calibre profiles
+          command: sh update_test_profiles.sh ${CHECKOUT_SITE_SLUG} "cookie-jar.txt"
+      - run:
+          name: Create Snapshot
+          command: calibre site create-snapshot --site=${CHECKOUT_SITE_SLUG}
+workflows:
+  version: 2
+  # Configuration to run the test every day at 11 a.m.
+  nightly:
+    triggers:
+      - schedule:
+          cron: "15 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build
